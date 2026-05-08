@@ -1,464 +1,473 @@
-<!-- index.html -->
-
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-<title>EDI QA AI Assistant</title>
+    <title>EDI QA AI Assistant</title>
 
-<style>
+    <style>
 
-body{
-font-family:Arial;
-background:#f4f6f9;
-padding:20px;
-}
+        body{
+            font-family: Arial;
+            background:#f4f6f9;
+            margin:0;
+            padding:20px;
+        }
 
-.card{
-background:white;
-padding:20px;
-margin-bottom:20px;
-border-radius:10px;
-box-shadow:0 2px 5px rgba(0,0,0,0.2);
-}
+        .container{
+            max-width:1400px;
+            margin:auto;
+        }
 
-textarea{
-width:100%;
-height:120px;
-font-size:18px;
-padding:10px;
-}
+        .card{
+            background:white;
+            padding:20px;
+            border-radius:10px;
+            margin-bottom:20px;
+            box-shadow:0 2px 10px rgba(0,0,0,0.1);
+        }
 
-button{
-background:#1976d2;
-color:white;
-border:none;
-padding:12px 20px;
-border-radius:5px;
-cursor:pointer;
-margin-top:10px;
-}
+        h1{
+            margin-bottom:30px;
+        }
 
-button:hover{
-background:#125aa0;
-}
+        .dashboard{
+            display:grid;
+            grid-template-columns:repeat(4,1fr);
+            gap:20px;
+        }
 
-table{
-width:100%;
-border-collapse:collapse;
-margin-top:20px;
-}
+        .box{
+            color:white;
+            padding:20px;
+            border-radius:10px;
+            font-size:22px;
+            font-weight:bold;
+        }
 
-th{
-background:#1976d2;
-color:white;
-padding:10px;
-}
+        .blue{
+            background:#1976d2;
+        }
 
-td{
-padding:10px;
-border:1px solid #ddd;
-}
+        .green{
+            background:green;
+        }
 
-.dashboard{
-display:flex;
-gap:20px;
-margin-bottom:20px;
-}
+        .red{
+            background:red;
+        }
 
-.box{
-flex:1;
-padding:20px;
-color:white;
-border-radius:10px;
-font-size:24px;
-font-weight:bold;
-}
+        .orange{
+            background:orange;
+        }
 
-.blue{background:#1976d2;}
-.green{background:green;}
-.red{background:red;}
-.orange{background:orange;}
+        textarea{
+            width:100%;
+            height:120px;
+            padding:10px;
+            font-size:16px;
+        }
 
-pre{
-background:#eee;
-padding:15px;
-border-radius:5px;
-white-space:pre-wrap;
-}
+        button{
+            background:#1976d2;
+            color:white;
+            border:none;
+            padding:12px 20px;
+            border-radius:5px;
+            cursor:pointer;
+            margin-top:15px;
+        }
 
-select{
-padding:5px;
-font-size:16px;
-}
+        button:hover{
+            background:#1258a7;
+        }
 
-</style>
+        table{
+            width:100%;
+            border-collapse:collapse;
+            margin-top:20px;
+        }
 
+        table th{
+            background:#1976d2;
+            color:white;
+            padding:12px;
+            border:1px solid #ddd;
+        }
+
+        table td{
+            border:1px solid #ddd;
+            padding:12px;
+        }
+
+        select{
+            padding:5px;
+        }
+
+        .defect-box{
+            background:#f8f8f8;
+            padding:15px;
+            border-radius:8px;
+            margin-top:20px;
+        }
+
+        input[type=file]{
+            margin-top:15px;
+        }
+
+    </style>
 </head>
 
 <body>
 
-<h1>🏥 EDI QA AI Assistant</h1>
+<div class="container">
 
-<div class="card">
+    <div class="card">
 
-<h2>📊 QA Dashboard</h2>
+        <h1>🏥 EDI QA AI Assistant</h1>
 
-<div class="dashboard">
+        <div class="dashboard">
 
-<div class="box blue">
-Total Tests<br>
-<span id="totalTests">0</span>
-</div>
+            <div class="box blue">
+                Total Tests
+                <h2 id="totalTests">0</h2>
+            </div>
 
-<div class="box green">
-Passed<br>
-<span id="passedTests">0</span>
-</div>
+            <div class="box green">
+                Passed
+                <h2 id="passedTests">0</h2>
+            </div>
 
-<div class="box red">
-Failed<br>
-<span id="failedTests">0</span>
-</div>
+            <div class="box red">
+                Failed
+                <h2 id="failedTests">0</h2>
+            </div>
 
-<div class="box orange">
-EDI Validations<br>
-<span id="ediCount">0</span>
-</div>
+            <div class="box orange">
+                EDI Validations
+                <h2 id="ediCount">0</h2>
+            </div>
 
-</div>
+        </div>
 
-</div>
+    </div>
 
-<div class="card">
+    <div class="card">
 
-<h2>📋 Requirement Input</h2>
+        <h2>📋 Requirement Input</h2>
 
-<textarea id="requirement"></textarea>
+        <textarea id="requirement">
+User should login with valid credentials
+        </textarea>
 
-<br>
+        <br>
 
-<button onclick="generateTestCases()">
-Generate Test Cases
-</button>
+        <button onclick="generateTestCases()">
+            Generate Test Cases
+        </button>
 
-</div>
+    </div>
 
-<div class="card">
+    <div class="card">
 
-<h2>🧪 Test Cases</h2>
+        <h2>🧪 Test Cases</h2>
 
-<button onclick="downloadExcel()">
-Download Excel Report
-</button>
+        <button onclick="downloadExcel()">
+            Download Excel Report
+        </button>
 
-<table>
+        <table>
 
-<thead>
+            <thead>
+                <tr>
+                    <th>Scenario</th>
+                    <th>Steps</th>
+                    <th>Expected Result</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
 
-<tr>
-<th>Scenario</th>
-<th>Steps</th>
-<th>Expected Result</th>
-<th>Status</th>
-</tr>
+            <tbody id="testTableBody">
 
-</thead>
+            </tbody>
 
-<tbody id="tableBody">
+        </table>
 
-</tbody>
+    </div>
 
-</table>
+    <div class="card">
 
-</div>
+        <h2>🐞 Defect Report</h2>
 
-<div class="card">
+        <div id="defectReport">
 
-<h2>🐞 Defect Report</h2>
+        </div>
 
-<div id="defectReport"></div>
+    </div>
 
-</div>
+    <div class="card">
 
-<div class="card">
+        <h2>📂 Upload EDI File</h2>
 
-<h2>📂 Upload EDI File</h2>
+        <input type="file" id="ediFile">
 
-<input type="file" id="ediFile">
+        <br>
 
-<br>
+        <button onclick="validateEDI()">
+            Validate EDI
+        </button>
 
-<button onclick="validateEDI()">
-Validate EDI
-</button>
+        <div id="ediResults"></div>
 
-<h3>Validation Result</h3>
-
-<pre id="ediResult"></pre>
+    </div>
 
 </div>
 
 <script>
 
-function generateTestCases(){
+    let currentTestCases = [];
 
-let requirement =
-document.getElementById("requirement").value;
+    async function generateTestCases(){
 
-fetch("http://127.0.0.1:5000/generate",{
+        const requirement =
+            document.getElementById("requirement").value;
 
-method:"POST",
+        const response = await fetch(
+            "https://edi-qa-ai-tool.onrender.com/generate",
+            {
+                method:"POST",
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body:JSON.stringify({
+                    requirement:requirement
+                })
+            }
+        );
 
-headers:{
-"Content-Type":"application/json"
-},
+        const data = await response.json();
 
-body:JSON.stringify({
-requirement:requirement
-})
+        currentTestCases = data;
 
-})
+        const tbody =
+            document.getElementById("testTableBody");
 
-.then(response=>response.json())
+        tbody.innerHTML = "";
 
-.then(data=>{
+        let passCount = 0;
+        let failCount = 0;
 
-let tableBody =
-document.getElementById("tableBody");
+        data.forEach((tc,index)=>{
 
-tableBody.innerHTML="";
+            if(tc.status === "PASS"){
+                passCount++;
+            }else{
+                failCount++;
+            }
 
-data.forEach(tc=>{
+            tbody.innerHTML += `
+                <tr>
+                    <td>${tc.scenario}</td>
+                    <td>${tc.steps}</td>
+                    <td>${tc.expected}</td>
 
-let row = `
+                    <td>
+                        <select onchange="updateStatus(${index}, this.value)">
+                            <option value="PASS"
+                                ${tc.status==="PASS" ? "selected" : ""}>
+                                PASS
+                            </option>
 
-<tr>
+                            <option value="FAIL"
+                                ${tc.status==="FAIL" ? "selected" : ""}>
+                                FAIL
+                            </option>
+                        </select>
+                    </td>
 
-<td>${tc.scenario}</td>
+                </tr>
+            `;
 
-<td>${tc.steps}</td>
+        });
 
-<td>${tc.expected}</td>
+        updateDashboard();
 
-<td>
+        generateDefects();
 
-<select onchange="updateDashboard()">
+    }
 
-<option value="">Select</option>
-<option value="PASS">PASS</option>
-<option value="FAIL">FAIL</option>
+    function updateStatus(index,value){
 
-</select>
+        currentTestCases[index].status = value;
 
-</td>
+        updateDashboard();
 
-</tr>
+        generateDefects();
+    }
 
-`;
+    function updateDashboard(){
 
-tableBody.innerHTML += row;
+        let total = currentTestCases.length;
 
-});
+        let pass =
+            currentTestCases.filter(
+                t => t.status === "PASS"
+            ).length;
 
-document.getElementById("totalTests").innerText =
-data.length;
+        let fail =
+            currentTestCases.filter(
+                t => t.status === "FAIL"
+            ).length;
 
-updateDashboard();
+        document.getElementById("totalTests").innerText = total;
 
-});
+        document.getElementById("passedTests").innerText = pass;
 
-}
+        document.getElementById("failedTests").innerText = fail;
+    }
 
-function updateDashboard(){
+    function generateDefects(){
 
-let selects =
-document.querySelectorAll("select");
+        const defectDiv =
+            document.getElementById("defectReport");
 
-let pass = 0;
-let fail = 0;
+        defectDiv.innerHTML = "";
 
-let defectHTML = "";
+        const failedCases =
+            currentTestCases.filter(
+                t => t.status === "FAIL"
+            );
 
-selects.forEach((select,index)=>{
+        if(failedCases.length === 0){
 
-if(select.value==="PASS"){
-pass++;
-}
+            defectDiv.innerHTML =
+                "<p>No defects found ✅</p>";
 
-if(select.value==="FAIL"){
+            return;
+        }
 
-fail++;
+        failedCases.forEach(tc=>{
 
-let row =
-document.querySelectorAll("#tableBody tr")[index];
+            defectDiv.innerHTML += `
 
-let cols = row.querySelectorAll("td");
+                <div class="defect-box">
 
-defectHTML += `
+                    <h3>${tc.scenario}</h3>
 
-<pre>
+                    <p>
+                        <b>Steps:</b>
+                        ${tc.steps}
+                    </p>
 
-Bug Title: ${cols[0].innerText} failed
+                    <p>
+                        <b>Expected:</b>
+                        ${tc.expected}
+                    </p>
 
-Steps:
-${cols[1].innerText}
+                    <p>
+                        <b>Status:</b>
+                        ${tc.status}
+                    </p>
 
-Expected:
-${cols[2].innerText}
+                </div>
 
-Actual:
-Test Failed
+            `;
 
-Severity: High
+        });
 
-Status: Open
+    }
 
-</pre>
+    async function downloadExcel(){
 
-`;
+        if(currentTestCases.length === 0){
 
-}
+            alert("Generate test cases first");
 
-});
+            return;
+        }
 
-document.getElementById("passedTests").innerText =
-pass;
+        const response = await fetch(
+            "https://edi-qa-ai-tool.onrender.com/export_excel",
+            {
+                method:"POST",
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body:JSON.stringify(currentTestCases)
+            }
+        );
 
-document.getElementById("failedTests").innerText =
-fail;
+        if(response.ok){
 
-document.getElementById("defectReport").innerHTML =
-defectHTML;
+            const blob = await response.blob();
 
-}
+            const url =
+                window.URL.createObjectURL(blob);
 
-function downloadExcel(){
+            const a =
+                document.createElement("a");
 
-let rows =
-document.querySelectorAll("#tableBody tr");
+            a.href = url;
 
-let data = [];
+            a.download = "QA_Test_Report.xlsx";
 
-rows.forEach(row=>{
+            document.body.appendChild(a);
 
-let cols = row.querySelectorAll("td");
+            a.click();
 
-let status =
-row.querySelector("select").value;
+            a.remove();
 
-data.push({
+        }else{
 
-scenario: cols[0].innerText,
-steps: cols[1].innerText,
-expected: cols[2].innerText,
-status: status
+            alert("Excel Export Failed");
+        }
 
-});
+    }
 
-});
+    async function validateEDI(){
 
-fetch("http://127.0.0.1:5000/export_excel", {
+        const file =
+            document.getElementById("ediFile").files[0];
 
-method:"POST",
+        if(!file){
 
-headers:{
-"Content-Type":"application/json"
-},
+            alert("Please select EDI file");
 
-body:JSON.stringify(data)
+            return;
+        }
 
-})
+        const formData = new FormData();
 
-.then(response => {
+        formData.append("file",file);
 
-if(!response.ok){
-throw new Error("Download Failed");
-}
+        const response = await fetch(
+            "https://edi-qa-ai-tool.onrender.com/validate_edi",
+            {
+                method:"POST",
+                body:formData
+            }
+        );
 
-return response.blob();
+        const data = await response.json();
 
-})
+        document.getElementById("ediCount").innerText =
+            data.result.length;
 
-.then(blob => {
+        const resultDiv =
+            document.getElementById("ediResults");
 
-const url =
-window.URL.createObjectURL(blob);
+        resultDiv.innerHTML = "";
 
-const a =
-document.createElement("a");
+        data.result.forEach(r=>{
 
-a.href = url;
+            resultDiv.innerHTML += `<p>${r}</p>`;
 
-a.download = "QA_Test_Report.xlsx";
+        });
 
-document.body.appendChild(a);
-
-a.click();
-
-a.remove();
-
-window.URL.revokeObjectURL(url);
-
-alert("Excel Downloaded Successfully");
-
-})
-
-.catch(error => {
-
-console.log(error);
-
-alert("Excel Export Failed");
-
-});
-
-}
-
-function validateEDI(){
-
-let file =
-document.getElementById("ediFile").files[0];
-
-if(!file){
-
-alert("Please select EDI file");
-
-return;
-
-}
-
-let formData = new FormData();
-
-formData.append("file",file);
-
-fetch("http://127.0.0.1:5000/validate_edi",{
-
-method:"POST",
-
-body:formData
-
-})
-
-.then(response=>response.json())
-
-.then(data=>{
-
-document.getElementById("ediResult").innerText =
-data.result.join("\n");
-
-let count =
-document.getElementById("ediCount");
-
-count.innerText =
-parseInt(count.innerText)+1;
-
-});
-
-}
+    }
 
 </script>
 
 </body>
-
 </html>
